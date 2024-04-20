@@ -1,5 +1,6 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import { getFirestore, collection } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -8,11 +9,13 @@ const firebaseConfig = {
   projectId: "expense-tracker-60840",
   storageBucket: "expense-tracker-60840.appspot.com",
   messagingSenderId: "208209138263",
-  appId: "1:208209138263:web:e8d7ff56a0e3e256dfc912"
+  appId: "1:208209138263:web:e8d7ff56a0e3e256dfc912",
 };
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const auth = app.auth();
+const db = getFirestore(app);
+const myCollection = collection(db, "myCollection");
 
-export default auth;
+export { auth, db, myCollection };

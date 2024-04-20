@@ -1,0 +1,101 @@
+.header {
+  margin: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.para {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.line {
+  width: 100%;
+  border-bottom: 1px solid black;
+  margin-top: 10px;
+}
+
+.link {
+  margin-left: 5px;
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  color: #0056b3;
+}
+
+.box {
+  background-color: #f5f5f5;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  width: 27%;
+}
+
+.font {
+  font-size: 17px;
+  font-style: italic;
+}
+
+.form {
+  margin-top: 2%;
+  margin-left: 35%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form div {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.form label {
+  font-weight: bold;
+  margin-right: 10px;
+  flex: 1;
+}
+
+.form input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 70px;
+}
+
+.buttonContainer {
+  margin-left:23%;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+.cancelButton,
+.updateButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancelButton {
+  background-color: #e74c3c; /* Red color */
+  color: white;
+  margin-right: 10px;
+}
+
+.updateButton {
+  background-color: #2ecc71; /* Green color */
+  color: white;
+}
+
+.cancelButton:hover,
+.updateButton:hover {
+  background-color: darken(currentColor, 10%);
+}
