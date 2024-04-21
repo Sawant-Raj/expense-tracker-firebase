@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import classes from "./Home.module.css";
+import AuthContext from "../store/auth-context";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const authCtx = useContext(AuthContext);
+
   const verifyEmail = async () => {
     const idToken = localStorage.getItem("token");
 
@@ -29,6 +35,13 @@ const Home = () => {
     }
   };
 
+  const logoutHandler = () => {
+    localStorage.removeItem("token");
+
+    navigate("/");
+    authCtx.userEmail = "";
+  };
+
   return (
     <>
       <header className={classes.header}>
@@ -41,6 +54,9 @@ const Home = () => {
         </p>
         <button onClick={verifyEmail} className={classes.verifyButton}>
           Verify Email
+        </button>
+        <button onClick={logoutHandler} className={classes.logoutButton}>
+          Logout
         </button>
       </header>
       <div className={classes.line}></div>
