@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faImage } from "@fortawesome/free-solid-svg-icons";
@@ -11,13 +11,38 @@ const Profile = () => {
 
   const authCtx = useContext(AuthContext);
 
+  const email = authCtx.userEmail.replace(/[.@]/g, "");
+  // const token = authCtx.token;
+
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(
+          `https://expense-tracker-60840-default-rtdb.firebaseio.com/${email}/contact-details.json`
+        );
+
+        const data = await response.json();
+        console.log("Data from useEffect is", data);
+        setUserData(data);
+
+        if (!response.ok) {
+          throw new Error(data.error.message);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchUserData();
+  }, []);
+
   const submitHandler = async (event) => {
     event.preventDefault();
 
     const enteredName = nameInputRef.current.value;
     const enteredPhotoUrl = photoUrlInputRef.current.value;
 
-    const email = authCtx.userEmail.replace(/[.@]/g, "");
     try {
       const response = await fetch(
         `https://expense-tracker-60840-default-rtdb.firebaseio.com/${email}/contact-details.json`,
@@ -59,13 +84,13 @@ const Profile = () => {
             <label htmlFor="name">
               <FontAwesomeIcon icon={faUser} /> Full Name:
             </label>
-            <input type="text" id="name" ref={nameInputRef} />
+            <input type="text" id="name" ref={nameInputRef} defaultValue={userData?.name}/>
           </div>
           <div>
             <label htmlFor="photoUrl">
               <FontAwesomeIcon icon={faImage} /> Profile Photo URL:
             </label>
-            <input type="text" id="photoUrl" ref={photoUrlInputRef} />
+            <input type="text" id="photoUrl" ref={photoUrlInputRef} defaultValue={userData?.photoUrl}/>
           </div>
         </div>
         <div className={classes.buttonContainer}>
