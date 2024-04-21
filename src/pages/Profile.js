@@ -12,7 +12,6 @@ const Profile = () => {
   const authCtx = useContext(AuthContext);
 
   const email = authCtx.userEmail.replace(/[.@]/g, "");
-  // const token = authCtx.token;
 
   const [userData, setUserData] = useState(null);
 
