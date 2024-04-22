@@ -1,4 +1,5 @@
 import React, { createContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext({
   userEmail: "",
@@ -8,6 +9,8 @@ const AuthContext = createContext({
 
 export const AuthContextProvider = (props) => {
   const [userEmail, setUserEmail] = useState("");
+
+  const navigate=useNavigate();
 
   const loginHandler = async (email, password) => {
     try {
@@ -36,6 +39,8 @@ export const AuthContextProvider = (props) => {
       setUserEmail(email);
 
       localStorage.setItem("token", data.idToken);
+
+      navigate("/home");
     } catch (error) {
       alert(error.message);
     }

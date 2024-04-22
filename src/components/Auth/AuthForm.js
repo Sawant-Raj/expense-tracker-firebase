@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import classes from "./AuthForm.module.css";
 import Home from "../../pages/Home";
 import AuthContext from "../../store/auth-context";
@@ -12,8 +12,6 @@ const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   const authCtx = useContext(AuthContext);
-
-  const navigate = useNavigate();
 
   const toggleIsLogin = () => {
     setIsLogin(!isLogin);
@@ -50,8 +48,6 @@ const AuthForm = () => {
   const submitHandler = (event) => {
     event.preventDefault();
     loginHandler();
-
-    navigate("/home");
   };
 
   return (
@@ -63,7 +59,6 @@ const AuthForm = () => {
             <div className={classes.control}>
               <input
                 type="email"
-                id="email"
                 placeholder="Email"
                 ref={emailInputRef}
                 required
@@ -72,7 +67,6 @@ const AuthForm = () => {
             <div className={classes.control}>
               <input
                 type="password"
-                id="password"
                 placeholder="Password"
                 ref={passwordInputRef}
                 required
@@ -82,11 +76,15 @@ const AuthForm = () => {
               <div className={classes.control}>
                 <input
                   type="password"
-                  id="confirmPassword"
                   placeholder="Confirm Password"
                   ref={confirmPasswordInputRef}
                   required
                 />
+              </div>
+            )}
+            {isLogin && (
+              <div className={classes["forgot-password-container"]}>
+                <Link to="/forgotPassword">Forgot Password?</Link>
               </div>
             )}
             <div className={classes.actions}>

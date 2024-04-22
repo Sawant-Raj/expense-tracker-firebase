@@ -93,3 +93,20 @@
 .footer button:hover {
   color: #0056b3;
 }
+
+.forgot-password-container {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.forgot-password-container a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.forgot-password-container a:hover {
+  color: #0056b3;
+}
+
