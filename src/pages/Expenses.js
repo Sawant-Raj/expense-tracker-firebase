@@ -1,5 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import classes from "./Expenses.module.css";
+import AuthContext from "../store/auth-context";
 
 const Expenses = () => {
   const amountInputRef = useRef();
@@ -8,7 +9,41 @@ const Expenses = () => {
 
   const [expenses, setExpenses] = useState([]);
 
-  const submitHandler = (event) => {
+  const authCtx = useContext(AuthContext);
+
+  const email = authCtx.userEmail.replace(/[.@]/g, "");
+  console.log("Email in expenses is", email);
+  
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      try {
+        const response = await fetch(
+          `https://expense-tracker-60840-default-rtdb.firebaseio.com/${email}/expenses.json`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch expenses.");
+        }
+
+        const data = await response.json();
+
+        if (data) {
+          const loadedExpenses = Object.keys(data).map((key) => ({
+            id: key,
+            ...data[key],
+          }));
+
+          console.log(loadedExpenses, "are the expenses");
+          setExpenses(loadedExpenses);
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+    fetchExpenses();
+  }, []);
+
+  const submitHandler = async (event) => {
     event.preventDefault();
 
     const enteredAmount = +amountInputRef.current.value;
@@ -16,13 +51,34 @@ const Expenses = () => {
     const enteredCategory = categoryInputRef.current.value;
 
     const newExpense = {
-      id: Math.random().toString(),
       amount: enteredAmount,
       description: enteredDescription,
       category: enteredCategory,
     };
 
-    setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
+    try {
+      const response = await fetch(
+        `https://expense-tracker-60840-default-rtdb.firebaseio.com/${email}/expenses.json`,
+        {
+          method: "POST",
+          body: JSON.stringify(newExpense),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to add expense.");
+      }
+
+      const data = await response.json();
+      console.log("Data of expense is ", data);
+
+      setExpenses((prevExpenses) => [
+        ...prevExpenses,
+        { id: data.name, ...newExpense },
+      ]);
+    } catch (error) {
+      alert(error.message);
+    }
 
     amountInputRef.current.value = "";
     descriptionInputRef.current.value = "";
@@ -53,7 +109,7 @@ const Expenses = () => {
           <select ref={categoryInputRef} required>
             <option value="">Select Category</option>
             <option value="Food">Food</option>
-            <option value="Petrol">Petrol</option>
+            <option value="Fuel">Fuel</option>
             <option value="Salary">Salary</option>
           </select>
         </div>
