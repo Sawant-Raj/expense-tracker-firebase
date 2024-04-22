@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import classes from "./Home.module.css";
 import AuthContext from "../store/auth-context";
+import Expenses from "./Expenses";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -60,6 +61,7 @@ const Home = () => {
         </button>
       </header>
       <div className={classes.line}></div>
+      <Expenses/>
     </>
   );
 };
