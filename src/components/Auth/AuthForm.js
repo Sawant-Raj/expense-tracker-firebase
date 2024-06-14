@@ -52,7 +52,7 @@ const AuthForm = () => {
 
   return (
     <>
-      {!authCtx.userEmail ? (
+      {!localStorage.getItem("token") ? (
         <section className={classes.auth}>
           <h1>{isLogin ? "Login" : "Sign Up"}</h1>
           <form onSubmit={submitHandler}>

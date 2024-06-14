@@ -3,11 +3,6 @@
   margin: 0 auto;
 }
 
-/* .expenses-form h2 {
-  text-align: center;
-  margin: 20px auto; 
-} */
-
 .expenses-form form {
   display: flex;
   flex-direction: column;
@@ -55,12 +50,25 @@
 }
 
 .expenses-list li {
+  align-items: center; /* Added to align button */
+  justify-content: space-between; /* Added to push button to the right */
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 10px;
   margin-bottom: 10px;
+  margin-left: 10px;
 }
 
-.expenses-list li:last-child {
-  margin-bottom: 0;
+.expenses-list li button {
+  background-color: #dc3545; /* Button color */
+  color: #fff; /* Button text color */
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.expenses-list li button:hover {
+  background-color: #c82333; /* Hover color */
 }

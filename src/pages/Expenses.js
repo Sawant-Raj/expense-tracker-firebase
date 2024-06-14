@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import classes from "./Expenses.module.css";
-import AuthContext from "../store/auth-context";
 
 const Expenses = () => {
   const amountInputRef = useRef();
@@ -8,17 +7,17 @@ const Expenses = () => {
   const categoryInputRef = useRef();
 
   const [expenses, setExpenses] = useState([]);
+  const [editingExpense, setEditingExpense] = useState(null);
 
-  const authCtx = useContext(AuthContext);
+  const email = localStorage.getItem("email").replace(/[.@]/g, "");
 
-  const email = authCtx.userEmail.replace(/[.@]/g, "");
   console.log("Email in expenses is", email);
-  
+
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
         const response = await fetch(
-          `https://expense-tracker-60840-default-rtdb.firebaseio.com/${email}/expenses.json`
+          `https://expense-tracker-new-9d398-default-rtdb.firebaseio.com/${email}/expenses.json`
         );
 
         if (!response.ok) {
@@ -57,25 +56,53 @@ const Expenses = () => {
     };
 
     try {
-      const response = await fetch(
-        `https://expense-tracker-60840-default-rtdb.firebaseio.com/${email}/expenses.json`,
-        {
-          method: "POST",
-          body: JSON.stringify(newExpense),
+      let response;
+      if (editingExpense) {
+        response = await fetch(
+          `https://expense-tracker-new-9d398-default-rtdb.firebaseio.com/${email}/expenses/${editingExpense.id}.json`,
+          {
+            method: "PUT",
+            body: JSON.stringify(newExpense),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to update expense.");
         }
-      );
 
-      if (!response.ok) {
-        throw new Error("Failed to add expense.");
+        const data = await response.json();
+        console.log("Data of expense is ", data);
+
+        setExpenses((prevExpenses) => [...prevExpenses, data]);
+
+        setEditingExpense(null);
+      } else {
+        response = await fetch(
+          `https://expense-tracker-new-9d398-default-rtdb.firebaseio.com/${email}/expenses.json`,
+          {
+            method: "POST",
+            body: JSON.stringify(newExpense),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to add expense.");
+        }
+
+        const data = await response.json();
+        console.log("Data of expense is ", data);
+
+        setExpenses((prevExpenses) => [
+          ...prevExpenses,
+          { id: data.name, ...newExpense },
+        ]);
       }
-
-      const data = await response.json();
-      console.log("Data of expense is ", data);
-
-      setExpenses((prevExpenses) => [
-        ...prevExpenses,
-        { id: data.name, ...newExpense },
-      ]);
     } catch (error) {
       alert(error.message);
     }
@@ -83,6 +110,42 @@ const Expenses = () => {
     amountInputRef.current.value = "";
     descriptionInputRef.current.value = "";
     categoryInputRef.current.value = "";
+  };
+
+  console.log(expenses, "are my expenses after edit");
+
+  const deleteHandler = async (id) => {
+    try {
+      const response = await fetch(
+        `https://expense-tracker-new-9d398-default-rtdb.firebaseio.com/${email}/expenses/${id}.json`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete expense.");
+      }
+
+      setExpenses((prevExpenses) =>
+        prevExpenses.filter((expense) => expense.id !== id)
+      );
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const editHandler = (id) => {
+    const expenseToEdit = expenses.find((expense) => expense.id === id);
+    setEditingExpense(expenseToEdit);
+
+    const updatedExpenses = expenses.filter((expense) => expense.id !== id);
+
+    amountInputRef.current.value = expenseToEdit.amount;
+    descriptionInputRef.current.value = expenseToEdit.description;
+    categoryInputRef.current.value = expenseToEdit.category;
+
+    setExpenses(updatedExpenses);
   };
 
   return (
@@ -123,6 +186,8 @@ const Expenses = () => {
             <li key={expense.id}>
               Amount: {expense.amount}, Description: {expense.description},
               Category: {expense.category}
+              <button onClick={() => editHandler(expense.id)}>Edit</button>
+              <button onClick={() => deleteHandler(expense.id)}>Delete</button>
             </li>
           ))}
         </ul>

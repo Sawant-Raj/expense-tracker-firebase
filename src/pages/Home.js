@@ -15,7 +15,7 @@ const Home = () => {
 
     try {
       const response = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAnCX0mjm-Uhts56l6CZ04wdOhQXI4E-iw",
+        "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyCiO4cr0uWYxd25aKyzRkvXpYzsRM_YYrE",
         {
           method: "POST",
           body: JSON.stringify({
@@ -38,6 +38,7 @@ const Home = () => {
 
   const logoutHandler = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("email");
 
     navigate("/");
     authCtx.userEmail = "";

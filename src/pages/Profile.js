@@ -11,7 +11,7 @@ const Profile = () => {
 
   const authCtx = useContext(AuthContext);
 
-  const email = authCtx.userEmail.replace(/[.@]/g, "");
+  const email = localStorage.getItem("email").replace(/[.@]/g, "");
 
   const [userData, setUserData] = useState(null);
 
@@ -19,7 +19,7 @@ const Profile = () => {
     const fetchUserData = async () => {
       try {
         const response = await fetch(
-          `https://expense-tracker-60840-default-rtdb.firebaseio.com/${email}/contact-details.json`
+          `https://expense-tracker-new-9d398-default-rtdb.firebaseio.com/${email}/contact-details.json`
         );
 
         const data = await response.json();
@@ -83,13 +83,23 @@ const Profile = () => {
             <label htmlFor="name">
               <FontAwesomeIcon icon={faUser} /> Full Name:
             </label>
-            <input type="text" id="name" ref={nameInputRef} defaultValue={userData?.name}/>
+            <input
+              type="text"
+              id="name"
+              ref={nameInputRef}
+              defaultValue={userData?.name}
+            />
           </div>
           <div>
             <label htmlFor="photoUrl">
               <FontAwesomeIcon icon={faImage} /> Profile Photo URL:
             </label>
-            <input type="text" id="photoUrl" ref={photoUrlInputRef} defaultValue={userData?.photoUrl}/>
+            <input
+              type="text"
+              id="photoUrl"
+              ref={photoUrlInputRef}
+              defaultValue={userData?.photoUrl}
+            />
           </div>
         </div>
         <div className={classes.buttonContainer}>
