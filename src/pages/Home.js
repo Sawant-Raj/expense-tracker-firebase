@@ -1,14 +1,14 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import classes from "./Home.module.css";
-import AuthContext from "../store/auth-context";
 import Expenses from "./Expenses";
+import { setUserLogout } from "../store/reducer/authSlice";
 
 const Home = () => {
   const navigate = useNavigate();
-
-  const authCtx = useContext(AuthContext);
+  const dispatch = useDispatch();
 
   const verifyEmail = async () => {
     const idToken = localStorage.getItem("token");
@@ -37,11 +37,8 @@ const Home = () => {
   };
 
   const logoutHandler = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("email");
-
+    dispatch(setUserLogout());
     navigate("/");
-    authCtx.userEmail = "";
   };
 
   return (
@@ -62,7 +59,7 @@ const Home = () => {
         </button>
       </header>
       <div className={classes.line}></div>
-      <Expenses/>
+      <Expenses />
     </>
   );
 };

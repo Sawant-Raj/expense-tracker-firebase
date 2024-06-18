@@ -1,86 +1,86 @@
-import React, { createContext} from "react";
-import { useNavigate } from "react-router-dom";
+// import React, { createContext} from "react";
+// import { useNavigate } from "react-router-dom";
 
-const AuthContext = createContext({
-  loginHandler: () => {},
-  signUpHandler: () => {},
-});
+// const AuthContext = createContext({
+//   loginHandler: () => {},
+//   signUpHandler: () => {},
+// });
 
-export const AuthContextProvider = (props) => {
+// export const AuthContextProvider = (props) => {
 
-  const navigate=useNavigate();
+//   const navigate=useNavigate();
 
-  const loginHandler = async (email, password) => {
-    try {
-      const response = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCiO4cr0uWYxd25aKyzRkvXpYzsRM_YYrE",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            email: email,
-            password: password,
-            returnSecureToken: true,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  // const loginHandler = async (email, password) => {
+  //   try {
+  //     const response = await fetch(
+  //       "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCiO4cr0uWYxd25aKyzRkvXpYzsRM_YYrE",
+  //       {
+  //         method: "POST",
+  //         body: JSON.stringify({
+  //           email: email,
+  //           password: password,
+  //           returnSecureToken: true,
+  //         }),
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
 
-      const data = await response.json();
-      console.log("data is", data);
+  //     const data = await response.json();
+  //     console.log("data is", data);
 
-      if (!response.ok) {
-        throw new Error(data.error.message);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(data.error.message);
+  //     }
 
-      localStorage.setItem("token", data.idToken);
-      localStorage.setItem("email", email);
+  //     localStorage.setItem("token", data.idToken);
+  //     localStorage.setItem("email", email);
 
-      navigate("/home");
-    } catch (error) {
-      alert(error.message);
-    }
-  };
+  //     navigate("/home");
+  //   } catch (error) {
+  //     alert(error.message);
+  //   }
+  // };
 
-  const signUpHandler = async (email, password) => {
-    try {
-      const response = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCiO4cr0uWYxd25aKyzRkvXpYzsRM_YYrE",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            email: email,
-            password: password,
-            returnSecureToken: true,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+//   const signUpHandler = async (email, password) => {
+//     try {
+//       const response = await fetch(
+//         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCiO4cr0uWYxd25aKyzRkvXpYzsRM_YYrE",
+//         {
+//           method: "POST",
+//           body: JSON.stringify({
+//             email: email,
+//             password: password,
+//             returnSecureToken: true,
+//           }),
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
 
-      const data = await response.json();
-      console.log("data is", data);
+//       const data = await response.json();
+//       console.log("data is", data);
 
-      if (!response.ok) {
-        throw new Error(data.error.message);
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
+//       if (!response.ok) {
+//         throw new Error(data.error.message);
+//       }
+//     } catch (error) {
+//       alert(error.message);
+//     }
+//   };
 
-  const contextValue = {
-    loginHandler: loginHandler,
-    signUpHandler: signUpHandler,
-  };
+//   const contextValue = {
+//     loginHandler: loginHandler,
+//     signUpHandler: signUpHandler,
+//   };
 
-  return (
-    <AuthContext.Provider value={contextValue}>
-      {props.children}
-    </AuthContext.Provider>
-  );
-};
+//   return (
+//     <AuthContext.Provider value={contextValue}>
+//       {props.children}
+//     </AuthContext.Provider>
+//   );
+// };
 
-export default AuthContext;
+// export default AuthContext;

@@ -11,7 +11,7 @@ const Profile = () => {
 
   const authCtx = useContext(AuthContext);
 
-  const email = localStorage.getItem("email").replace(/[.@]/g, "");
+  const email = localStorage.getItem("email")?localStorage.getItem("email").replace(/[.@]/g, ""):null;
 
   const [userData, setUserData] = useState(null);
 
@@ -44,7 +44,7 @@ const Profile = () => {
 
     try {
       const response = await fetch(
-        `https://expense-tracker-60840-default-rtdb.firebaseio.com/${email}/contact-details.json`,
+        `https://expense-tracker-new-9d398-default-rtdb.firebaseio.com//${email}/contact-details.json`,
         {
           method: "PUT",
           body: JSON.stringify({

@@ -9,7 +9,9 @@ const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
   const [editingExpense, setEditingExpense] = useState(null);
 
-  const email = localStorage.getItem("email").replace(/[.@]/g, "");
+  const email = localStorage.getItem("email")
+    ? localStorage.getItem("email").replace(/[.@]/g, "")
+    : null;
 
   console.log("Email in expenses is", email);
 
@@ -148,6 +150,11 @@ const Expenses = () => {
     setExpenses(updatedExpenses);
   };
 
+  const totalExpenses = expenses.reduce(
+    (total, expense) => total + expense.amount,
+    0
+  );
+
   return (
     <div>
       <h2 style={{ textAlign: "center" }}>Enter Expense</h2>
@@ -178,6 +185,10 @@ const Expenses = () => {
         </div>
         <button type="submit">Add Expense</button>
       </form>
+
+      {totalExpenses > 10000 && (
+        <button className={classes.premiumButton}>Activate Premium</button>
+      )}
 
       <div className={classes["expenses-list"]}>
         <h2>Expenses List</h2>

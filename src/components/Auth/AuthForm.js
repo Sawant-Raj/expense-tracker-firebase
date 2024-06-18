@@ -1,17 +1,20 @@
-import { useContext, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import classes from "./AuthForm.module.css";
 import Home from "../../pages/Home";
-import AuthContext from "../../store/auth-context";
+import { useDispatch } from "react-redux";
+import { loginAction, signUpAction } from "../../store/actions/authActions";
 
 const AuthForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const confirmPasswordInputRef = useRef();
 
   const [isLogin, setIsLogin] = useState(true);
-
-  const authCtx = useContext(AuthContext);
+  const [error, setError] = useState("");
 
   const toggleIsLogin = () => {
     setIsLogin(!isLogin);
@@ -20,28 +23,32 @@ const AuthForm = () => {
     if (confirmPasswordInputRef.current) {
       confirmPasswordInputRef.current.value = "";
     }
+    setError(""); // Clear error when toggling form
   };
 
   const loginHandler = async () => {
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
-    const enteredConfirmPassword = !isLogin
-      ? confirmPasswordInputRef.current.value
-      : "";
 
     if (isLogin) {
-      authCtx.loginHandler(enteredEmail, enteredPassword);
+      try {
+        await dispatch(loginAction(enteredEmail, enteredPassword));
+        navigate("/home");
+      } catch (error) {
+        alert(error.message);
+      }
     } else {
+      const enteredConfirmPassword = confirmPasswordInputRef?.current?.value;
       if (enteredPassword !== enteredConfirmPassword) {
         alert("Passwords do not match!");
         return;
       }
-
-      authCtx.signUpHandler(enteredEmail, enteredPassword);
-      setIsLogin(true);
-
-      emailInputRef.current.value = "";
-      passwordInputRef.current.value = "";
+      try {
+        await dispatch(signUpAction(enteredEmail, enteredPassword));
+        setIsLogin(true);
+      } catch (error) {
+        setError(error.message);
+      }
     }
   };
 
@@ -55,6 +62,7 @@ const AuthForm = () => {
       {!localStorage.getItem("token") ? (
         <section className={classes.auth}>
           <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+          {error && <p className={classes.error}>{error}</p>}
           <form onSubmit={submitHandler}>
             <div className={classes.control}>
               <input
@@ -95,7 +103,7 @@ const AuthForm = () => {
           </form>
           <div className={classes.footer}>
             <p>
-              {isLogin ? "Don't have an account?" : "Already have an account"}
+              {isLogin ? "Don't have an account?" : "Already have an account?"}
               <button onClick={toggleIsLogin}>
                 {isLogin ? "Sign Up" : "Login"}
               </button>
@@ -110,3 +118,21 @@ const AuthForm = () => {
 };
 
 export default AuthForm;
+
+
+
+
+// if (isLogin) {
+//       authCtx.loginHandler(enteredEmail, enteredPassword);
+//     } else {
+//       if (enteredPassword !== enteredConfirmPassword) {
+//         alert("Passwords do not match!");
+//         return;
+//       }
+
+//       authCtx.signUpHandler(enteredEmail, enteredPassword);
+//       setIsLogin(true);
+
+//       emailInputRef.current.value = "";
+//       passwordInputRef.current.value = "";
+//     }
